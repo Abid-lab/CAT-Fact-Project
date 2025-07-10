@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Cat Fact Project</title>
+    <style>
+    .main{
+           display: flex;
+           justify-content: center;
+           align-items: center;
+           flex-direction: column;
+        }
+      h1 {
+        text-align: center;
+      }
+
+      #fact {
+        border: 1px dashed rgb(231, 133, 133);
+        width: 60%;
+        min-height: 100px;
+        text-align: center;
+        font-size: 1.5rem;
+        padding-top: 20px;
+        font-style: italic;
+      }
+
+      #funfact {
+        padding: 1rem;
+        font-size: 1rem;
+        margin-top: 30px;
+        text-align: center;
+        border-radius: 30px;
+        outline: none;
+        border: none;
+        cursor: pointer;
+      }
+
+      #message {
+        font-size: 1.2rem;
+        color: #555;
+        font-style: italic;
+        display: none;
+        /* Hide the message initially */
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="main">
+      <h1>Fun Facts About Cat</h1>
+      <div id="fact"></div>
+      <button id="funfact">Get Fact</button>
+    </div>
+  </body>
+
+  <script>
+    let funfact = document.getElementById("funfact");
+
+    async function factAboutCats() {
+      const fact = document.getElementById("fact");
+      fact.style.fontSize = "1.5rem";
+      fact.style.color = "#555";
+      fact.style.fontStyle = "italic";
+      fact.textContent = "Getting Fact...";
+      funfact.disabled = true;
+
+      try {
+        let response = await fetch("https://catfact.ninja/fact");
+
+        if (!response.ok) {
+          throw new Error("Network response was not ok " + response.status);
+        }
+        const catFactData = await response.json();
+        fact.innerText = "";
+        const para = document.createElement("p");
+        para.textContent = catFactData.fact;
+        fact.appendChild(para);
+      } catch (error) {
+        console.error("Failed to fetch cat fact:", error);
+        fact.textContent = "Oops! Couldn't load a cat fact.";
+      } finally {
+        funfact.disabled = false;
+      }
+    }
+
+    funfact.addEventListener("click", () => {
+      factAboutCats();
+    });
+  </script>
+</html>
